@@ -1,0 +1,13 @@
+html
+
+	head
+
+	title Clout Jar
+
+	body
+
+	h1 CLOUT-JAR
+	ul
+		each event in data.events
+			li
+				a(href=`/${event.idEvent}`)= event.strEvent

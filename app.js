@@ -5,7 +5,7 @@ var bodyParser = require("body-parser");
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static(__dirname + "/public"));
-app.set("view engine", "ejs");
+app.set("view engine", "pug");
 
 app.get("/", function(req, res){
 
@@ -18,9 +18,13 @@ app.get("/", function(req, res){
     request(url, function(error, response, body){
         if(!error && response.statusCode == 200){
         	var data = JSON.parse(body);
-            res.render("index", {data: data});
+            res.render("index", {data});
         }
     });
+});
+
+app.get("/:game-id", function(req, res){
+	res.send("hello");
 });
 
 app.listen(process.env.PORT || 3000, function(){
