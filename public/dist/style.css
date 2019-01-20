@@ -1,0 +1,95 @@
+html, body {
+    background-color: #F5F5F5;
+    margin:0;
+    padding: 0;
+    font-family: Lato;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+#header {
+    background-color: #383A5E;
+    color: #FFF;
+    padding: 5px 5px 5px 30px;
+}
+
+#header h1 {
+    display: inline-block;
+    font-weight: 900;
+}
+
+.header-image {
+    width: 75px;
+    vertical-align: middle;
+    margin-bottom: 20px;
+    margin-left: 15px;
+}
+
+#games {
+    margin-left: 30px;
+}
+
+#games h2 {
+    font-weight: 900;
+    position:relative;
+    z-index:1;
+}
+
+h2:after {
+    content:"";
+    position:absolute;
+    width: 205px;
+    height:70%;
+    background-color: #FAAF43;
+    left:-2px;
+    bottom:-5px;
+    z-index:-1;
+}
+
+.grid-wrapper {
+    display: grid;
+    padding-top: 25px;
+    grid-template-columns: repeat(auto-fill, 200px);
+    grid-column-gap: 50px;
+    grid-row-gap: 25px;
+}
+
+.boxscore {
+    display: grid;
+    padding: 12px 10px;
+    padding-left: 25px;
+    grid-template-rows: auto auto;
+    grid-template-columns: auto auto;
+    width: 200px;
+    border: 2px solid #383A5E;
+    border-radius: 80px;
+}
+
+.team {
+    display: grid;
+    grid-template-columns: 33px auto;
+    grid-template-rows: 35px auto;
+    align-items: center;
+}
+
+.team img {
+    width: 30px;
+    height: 30px;
+    margin-top: -5px;
+}
+
+.details {
+    font-size: 14px;
+}
+
+.details p {
+    font-weight: 700;
+}
+
+.details span {
+    color: #ABABAB;
+    font-size: 10px;
+}
