@@ -253,7 +253,7 @@ app.get("/dashboard", function (req, res) {
 					console.log("home");
 					database.ref("/Users/" + userKey).once("value", function(data) {
 						var db = data.val();
-						var newCloutAmount = db.clout + 1;
+						var newCloutAmount = db.clout + Math.floor(db.bet[team] / 25);
 						database.ref("/Users/" + userKey).update({
 							clout: newCloutAmount
 						});
@@ -266,7 +266,7 @@ app.get("/dashboard", function (req, res) {
 					console.log("away");
 					database.ref("/Users/" + userKey).once("value", function(data) {
 						var db = data.val();
-						var newCloutAmount = db.clout + 1;
+						var newCloutAmount = db.clout + Math.floor(db.bet[team] / 25);
 						database.ref("/Users/" + userKey).update({
 							clout: newCloutAmount
 						});
