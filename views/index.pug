@@ -1,13 +1,39 @@
 html
-
 	head
-
+		link(rel='stylesheet', href='/dist/style.css')
+		link(href="https://fonts.googleapis.com/css?family=Lato:400,700,900" rel="stylesheet")
+		meta(name="viewport" content="width=device-width, initial-scale=1")
 	title Clout Jar
-
 	body
+		div#header
+			h1 CLOUT JAR
+			img.header-image(src="/dist/shoe.png")
 
-	h1 CLOUT-JAR
-	ul
-		each event in data.events
-			li
-				a(href=`/${event.idEvent}`)= event.strEvent
+		div#games
+			h2 GAMES TONIGHT
+
+			div.grid-wrapper
+				each event in data.events
+					a(href=`/${event.idEvent}`)
+						div.boxscore
+							div.teams
+								div.team
+									- const badge = event.badges;
+									img(src=(badge.homeTeam || 'dist/sad-jordan.png'))
+									- const homeTeam = event.strHomeTeam.split(" ");
+									- const homeTeamLength = homeTeam.length - 1;
+									h4= homeTeam[homeTeamLength]
+								div.team
+									img(src=(badge.awayTeam || 'dist/sad-jordan.png'))
+									- const awayTeam = event.strAwayTeam.split(" ");
+									- const awayTeamLength = awayTeam.length - 1;
+									h4= awayTeam[awayTeamLength]
+							div.details
+								p
+									span TODAY:
+									|  7PM
+
+			//- ul
+			//- 	each event in data.events
+			//- 		li
+			//- 			a(href=`/${event.idEvent}`)= event.strEvent
