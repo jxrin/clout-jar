@@ -33,6 +33,22 @@ app.get("/", function(req, res){
     });
 });
 
+app.get("/dashboard", function(req, res){
+	database.ref("Users").once("value", function(data){
+		var users = data.val(); // { Jevin: { bet: { TORvsPHX: 20} } 
+		
+		const usersList = [];
+		Object.keys(users).forEach(user => {
+			const userData = users[user];
+			const valueObj = {};
+			valueObj[user] = userData;
+			usersList.push(valueObj);
+		});
+
+		res.redirect("/")
+	});
+});
+
 app.get("/:gameid", function(req, res){
 
 	var gameId = req.params.gameid;
@@ -76,7 +92,7 @@ app.post("/:gameid", function(req, res){
 		});
 	});
 
-	database.ref("Users" +"/" + name).set({
+	database.ref("Users" + "/" + name).set({
 		bet: {[team]: newAmount}
 	});
 
