@@ -1,0 +1,16 @@
+html
+
+	head
+
+	title Clout Jar
+
+	body
+
+	h1 Dashboard
+	ul
+		each user in data
+			div
+				- var key = Object.keys(user)[0]
+				p= key
+				- var innerObj = Object.keys(user[key].bet)[0]
+				p= user[key].bet[innerObj]
