@@ -1,0 +1,15 @@
+html
+
+	head
+
+	title Clout Jar
+
+	body
+
+	h1 Bet
+
+	form(action=`/${data.events[0].idEvent}` method='POST')
+		input(type='text', placeholder='name', name='name')
+		input(type='text', placeholder='team', name='team')
+		input(type='text', placeholder='amount', name='amount')
+		input(type='submit')

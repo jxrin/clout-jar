@@ -1,0 +1,20 @@
+html
+
+	head
+
+	title= data.events[0].strEvent
+
+	body
+
+	h1= data.events[0].strEvent
+	
+	p= data.events[0].strHomeTeam
+	p= data.events[0].strHomeScore
+
+	p= data.events[0].strAwayTeam
+	p= data.events[0].strAwayScore
+
+	a(href=`/${data.events[0].idEvent}/bet`) Bet
+
+
+
