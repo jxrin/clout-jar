@@ -203,7 +203,7 @@ app.get("/dashboard", function (req, res) {
 			            responseArr.push(data);
 			            if(i === usersList.length - 1) {
 			            	setTimeout(() => {resolve();}, 200)
-			            	
+
 			            }
 
 			        }
@@ -249,7 +249,7 @@ app.get("/dashboard", function (req, res) {
 
 				//Check if home team won and user picked them
 				} else if((parseInt(responseArr[i].events[0].intHomeScore) > parseInt(responseArr[i].events[0].intAwayScore)) && (team == responseArr[i].events[0].strHomeTeam)) {
-					
+
 					console.log("home");
 					database.ref("/Users/" + userKey).once("value", function(data) {
 						var db = data.val();
@@ -259,7 +259,7 @@ app.get("/dashboard", function (req, res) {
 						});
 					});
 					failed = false;
-					
+
 				//Check if away team won and user picked them
 				} else if((parseInt(responseArr[i].events[0].intHomeScore) < parseInt(responseArr[i].events[0].intAwayScore)) && (team == responseArr[i].events[0].strAwayTeam)) {
 
@@ -291,7 +291,7 @@ app.get("/dashboard", function (req, res) {
 			} else {
 				res.render("dashboard", {data: usersList, data2: responseArr});
 			}
-			
+
 		});
 
 		gameScores.catch(function(error) {
@@ -309,7 +309,13 @@ app.get("/:gameid", function (req, res) {
 
 	request(url, function (error, response, body) {
 		if (!error && response.statusCode == 200) {
-			var data = JSON.parse(body);
+			let data;
+			try {
+				data = JSON.parse(body);
+			} catch (e) {
+				return console.error(e);
+			}
+
 			res.render("game", { data });
 		}
 	});
