@@ -24,7 +24,7 @@ app.get("/", function(req, res){
     var date = new Date();
     var isoDate = date.toISOString();
 
-    var url = "https://www.thesportsdb.com/api/v1/json/1/eventsday.php?d=" + isoDate + "&l=NBA";
+    var url = "https://www.thesportsdb.com/api/v1/json/1/eventsday.php?d=" + "2019-01-10" + "&l=NBA";
 
     request(url, function(error, response, body){
         if(!error && response.statusCode == 200){
@@ -188,7 +188,116 @@ app.get("/dashboard", function (req, res) {
 			usersList.push(valueObj);
 		});
 
-		res.redirect("/")
+		let responseArr = []
+		var gameScores = new Promise(function(resolve, reject) {
+
+			for(let i = 0; i < usersList.length; i++) {
+				let user = Object.keys(usersList[i])[0];
+				var url = "https://www.thesportsdb.com/api/v1/json/1/lookupevent.php?id=" + usersList[i][user].gameid;
+				setTimeout(() => {
+
+				}, 200)
+			    request(url, function(error, response, body){
+			        if(!error && response.statusCode == 200){
+			        	var data = JSON.parse(body);
+			            responseArr.push(data);
+			            if(i === usersList.length - 1) {
+			            	setTimeout(() => {resolve();}, 200)
+			            	
+			            }
+
+			        }
+
+			        if(error) {
+			        	console.log(error)
+			        	reject();
+			        }
+
+			    });
+			}
+		});
+
+		gameScores.then(function() {
+			var failed = false;
+			responseArr.reverse();
+
+			for(let i = 0; i < usersList.length; i++){
+
+				let userKey = Object.keys(usersList[i])[0];
+				console.log(userKey);
+				// console.log(usersList[i][userKey]);
+				let team = Object.keys(usersList[i][userKey].bet)[0];
+				console.log(team);
+
+				console.log(responseArr);
+
+				console.log(responseArr[i].events[0].intHomeScore);
+				console.log(responseArr[i].events[0].intAwayScore);
+				console.log(responseArr[i].events[0].strHomeTeam);
+				console.log(parseInt(responseArr[i].events[0].intHomeScore) > parseInt(responseArr[i].events[0].intAwayScore));
+				console.log(team == responseArr[i].events[0].strHomeTeam);
+				// console.log(responseArr[i].events[0].intHomeScore);
+				// console.log(responseArr[i].events[0].intAwayScore);
+				// console.log(responseArr[i].events[0].strHomeTeam);
+				// console.log(responseArr[i].events[0].strAwayTeam);
+
+				//if data hasn't loaded in yet
+				if(responseArr[i].events[0].intHomeScore === null ){
+
+					console.log("fail");
+					failed = true;
+
+				//Check if home team won and user picked them
+				} else if((parseInt(responseArr[i].events[0].intHomeScore) > parseInt(responseArr[i].events[0].intAwayScore)) && (team == responseArr[i].events[0].strHomeTeam)) {
+					
+					console.log("home");
+					database.ref("/Users/" + userKey).once("value", function(data) {
+						var db = data.val();
+						var newCloutAmount = db.clout + 1;
+						database.ref("/Users/" + userKey).update({
+							clout: newCloutAmount
+						});
+					});
+					failed = false;
+					
+				//Check if away team won and user picked them
+				} else if((parseInt(responseArr[i].events[0].intHomeScore) < parseInt(responseArr[i].events[0].intAwayScore)) && (team == responseArr[i].events[0].strAwayTeam)) {
+
+					console.log("away");
+					database.ref("/Users/" + userKey).once("value", function(data) {
+						var db = data.val();
+						var newCloutAmount = db.clout + 1;
+						database.ref("/Users/" + userKey).update({
+							clout: newCloutAmount
+						});
+					});
+					failed = false;
+
+				} else {
+
+					database.ref("/Users/" + userKey).once("value", function(data) {
+						var db = data.val();
+						var newCloutAmount = db.clout;
+						database.ref("/Users/" + userKey).update({
+							clout: newCloutAmount
+						});
+					});
+
+				}
+			};
+
+			if(failed === true){
+				res.redirect("/")
+			} else {
+				res.render("dashboard", {data: usersList, data2: responseArr});
+			}
+			
+		});
+
+		gameScores.catch(function(error) {
+  			console.log(error);
+		});
+
 	});
 });
 
@@ -235,11 +344,13 @@ app.post("/:gameid", function (req, res) {
 		});
 	});
 
-	database.ref("Users" + "/" + name).set({
-		bet: { [team]: newAmount }
+
+	database.ref("Users/" + name).update({
+		bet: {[team]: newAmount},
+		gameid: req.params.gameid
 	});
 
-	res.redirect("/" + gameId);
+	res.redirect("/dashboard");
 
 });
 
