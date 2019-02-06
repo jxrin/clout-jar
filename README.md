@@ -13,5 +13,5 @@ My friends and I used to run something similar in our house during university so
 ## Installation
 
 1. Clone the repo
-2. 'cd' into the directory
-3. run 'node app.js'
+2. cd into the directory
+3. run node app.js
